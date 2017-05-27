@@ -15,30 +15,28 @@ Install dependencies for the build environment (Debian/Ubuntu):
 
 ```bash
     sudo apt-get update; sudo apt-get upgrade
-    sudo apt-get install subversion g++ zlib1g-dev build-essential git python
-    sudo apt-get install libncurses5-dev gawk gettext unzip file libssl-dev wget
+    sudo apt install subversion g++ zlib1g-dev build-essential git python
+    sudo apt install libncurses5-dev gawk gettext unzip file libssl-dev wget
 ```
 Build commands for the console:
 
 ```bash
-    git clone https://github.com/openwrt/openwrt.git
-    cd openwrt
-    git reset --hard 0f757bd2606971252f901ef3faf4dbd0086315f7
+    git clone -b v17.01.1 git://git.lede-project.org/source.git
+    cd source
     
     ./scripts/feeds update -a
     ./scripts/feeds install -a
     
-    git clone https://github.com/ffbsee/firmware.git
+    git clone -b dev https://github.com/ffbsee/firmware.git
     cp -rf firmware/files firmware/package .
-    chmod -R a+rX firmware/files/www
-    git am --whitespace=nowarn firmware/patches/openwrt/*.patch
+    git am --whitespace=nowarn firmware/patches/lede/*.patch
     cd feeds/routing && git am --whitespace=nowarn ../../firmware/patches/routing/*.patch && cd -
-    cd feeds/packages && git am --whitespace=nowarn ../../firmware/patches/packages/*.patch && cd -
     rm -rf firmware tmp
     
     make defconfig
     make menuconfig
 ```
+
 Now select the right "Target System" and "Target Profile" for your AP model:
 
 For example, for the TL-WR841ND, select:
