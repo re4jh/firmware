@@ -18,6 +18,14 @@ Install dependencies for the build environment (Debian/Ubuntu):
     sudo apt install subversion g++ zlib1g-dev build-essential git python
     sudo apt install libncurses5-dev gawk gettext unzip file libssl-dev wget
 ```
+
+To build the firmware at "Arch Linux" or "Antergos":
+```bash
+    sudo pacman -Suy
+    sudo pacman -S --needed subversion asciidoc bash bc binutils bzip2 fastjar flex git gcc util-linux gawk intltool zlib make cdrkit ncurses openssl patch perl-extutils-makemaker rsync sdcc unzip wget gettext libxslt boost libusb bin86 sharutils b43-fwcutter findutils
+```
+For more Information please have a look to [the Wiki](https://lede-project.org/docs/guide-developer/install-buildsystem)
+
 Build commands for the console:
 
 ```bash
