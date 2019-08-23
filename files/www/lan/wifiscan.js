@@ -82,8 +82,8 @@ function init() {
 			if (interfaces.length == 0) {
 				continue;
 			}
-			for (var interface in interfaces) {
-				var ifname = interfaces[interface].ifname;
+			for (var aninterface in interfaces) {
+				var ifname = interfaces[aninterface].ifname;
 				if (typeof(ifname) == 'string') {
 					add_list_entry(device, ifname);
 				}
