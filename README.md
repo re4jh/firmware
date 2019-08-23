@@ -18,18 +18,19 @@ Install dependencies for the build environment (Debian/Ubuntu):
 ```bash
     sudo apt-get update; sudo apt-get upgrade
     sudo apt-get install subversion g++ zlib1g-dev build-essential git python
-    sudo apt-get install libncurses5-dev gawk gettext unzip file libssl-dev wget
+    sudo apt-get install libncurses5-dev gawk gettext unzip file libssl-dev wget yui-compressor
 ```
 Build commands for the console:
 
 ```bash
-git clone git://git.openwrt.org/source.git 
+git clone git://git.openwrt.org/source.git
 cd source
-git reset --hard a941d39460b67d2d21e86d9c73d3e9b099b2d7fb 
-      
+git reset --hard a941d39460b67d2d21e86d9c73d3e9b099b2d7fb
+
 git clone https://github.com/ffbsee/ffbsee-firmware.git
+./minify-webstuff.sh
 cp -rf ffbsee-firmware/files ffbsee-firmware/package ffbsee-firmware/feeds.conf .
- 
+
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 git am --whitespace=nowarn ffbsee-firmware/patches/openwrt/*.patch
