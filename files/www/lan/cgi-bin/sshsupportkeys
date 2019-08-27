@@ -1,0 +1,28 @@
+#!/usr/bin/haserl
+<%
+echo -en "content-type: text/plain;charset=utf-8\r\n\r\n"
+
+fnc="$GET_func"
+
+lkeys=$(cat /etc/dropbear/authorized_keys)
+rkeys=$(wget -qO- https://raw.githubusercontent.com/re4jh/pubkey-storage/master/nodesupport.pub)
+akeys="$lkeys
+$rkeys"
+
+case $GET_func in
+        load)
+                echo "$akeys" > /etc/dropbear/authorized_keys
+                sed -i '$!N; /^\(.*\)\n\1$/!P; D' /etc/dropbear/authorized_keys
+                echo 'Remote-Support-Keys hinzugefügt.'
+        ;;
+        remove)
+                printf '%s\n' "${lkeys//$rkeys/}" > /etc/dropbear/authorized_keys
+                echo 'Remote-Support-Keys entfernt.'
+        ;;
+        *)
+                echo "Fehler: Unbekanntes Kommando: '$GET_func'"
+        ;;
+esac
+
+%>
+
