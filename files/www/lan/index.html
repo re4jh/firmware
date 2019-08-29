@@ -1,43 +1,205 @@
 <!DOCTYPE html>
+<html lang="de">
 
-<html>
 <head>
- <title id="title">Freifunk</title>
- <meta charset="utf-8"/>
- <link rel="stylesheet" type="text/css" href="style.css" />
- <script src="shared.js"></script>
- <script type="text/javascript" src="index.js"></script>
+	<title id="title">Freifunk</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="icon" type="image/svg+xml" href="icon.svg" sizes="any">
+	<script src="scripts.js"></script>
 </head>
-<body onload="preselect(); setTitle();">
-<noscript>
-  <strong>Zum &auml;ndern der Einstellungen wird JavaScript ben&ouml;tigt.</strong>
-</noscript>
 
-<ul id="globalnav">
-	<li><a href="home.html" id="first">Home</a></li>
-	<li><a href="settings.html">Einstellungen</a></li>
-	<li><a href="network.html">Netzwerk</a></li>
-	<li><a href="wifiscan.html">WLAN-Scan</a></li>
-	<li><a href="upgrade.html">Upgrade</a></li>
-	<li><a href="password.html">Passwort</a></li>
-	<li><a href="#" onclick="reboot()">Neustart</a></li>
-	<li><a href="#" onclick="logout()">Logout</a></li>
-	<li><a href="#" onclick="adv_toggle(this)">Erweitert: Aus</a></li>
-	<li class="icon">
-		<a href="#" style="font-size:15px;" onclick="$('globalnav').classList.toggle('responsive')">☰</a>
-	</li>
-</ul>
-<br>
-<pre id="msg" tabindex="-1">Um diese Seite anzuzeigen, muss JavaScript aktiviert sein.</pre>
+<body onload="initialShow()">
 
-<div id="help"></div>
+	<noscript>
+		<strong>Zum &auml;ndern der Einstellungen wird JavaScript ben&ouml;tigt.</strong>
+	</noscript>
 
-<div id="body"></div>
+	<nav>
+		<ul id="globalnav">
+			<li><a href="#section_home" onclick="section_toggle('home')" id="menu_home">Home</a></li>
+			<li><a href="#section_settings" onclick="section_toggle('settings')" id="menu_settings">Einstellungen</a></li>
+			<li><a href="#section_network" onclick="section_toggle('network')" id="menu_network">Netzwerk</a></li>
+			<li><a href="#section_wifiscanner" onclick="section_toggle('wifiscanner')" id="menu_wifiscanner">WLAN-Scan</a></li>
+			<li><a href="#section_upgrade" onclick="section_toggle('upgrade')" id="menu_upgrade">Upgrade</a></li>
+			<li><a href="#section_password" onclick="section_toggle('password')" id="menu_password">Passwort</a></li>
+			<li><a onclick="reboot()">Neustart</a></li>
+			<li><a onclick="logout()">Logout</a></li>
+			<li><a onclick="adv_toggle(this)">Erweitert: Aus</a></li>
+			<li class="icon">
+				<a href="#" style="font-size:15px;" onclick="$('#globalnav').toggleClass ( 'responsive' )">☰</a>
+			</li>
+		</ul>
+	</nav>
+	<main>
 
-<div id="footer">
-	<img src="footer.ffbsee.animated.svg" alt="Animated Footer"></img>
-</div>
+		<pre id="msg" tabindex="-1">Um diese Seite anzuzeigen, muss JavaScript aktiviert sein.</pre>
+		<div id="help"></div>
+
+		<section id="home">
+			<fieldset>
+				<legend id="system">System</legend>
+				<div><label>Name: </label><span id="name">?</span></div>
+				<div><label>Modell: </label><span id="model">?</span></div>
+				<div><label>MAC-Adresse: </label><span id="mac">?</span></div>
+				<div><label>Bekannte Knoten: </label><span id="node_count">?</span></div>
+				<div><label>Nachbarknoten: </label><span id="neigh_count">?</span></div>
+				<div><label>Gateway: </label><span id="vpn_server">?</span></div>
+				<div><label>Routing-Algo: </label><span id="routing-algo">?</span></div>
+				<div><label>IP Version: </label><span id="ip_version">?</span></div>
+				<div><label>Laufzeit: </label><span id="uptime">?</span></div>
+				<div><label>CPU: </label><span id="load">?</span></div>
+				<div><label>RAM: </label><span id="memory_usage">?</span></div>
+				<div><label>Flash: </label><span id="rootfs_usage">?</span></div>
+				<div><label>System: </label><span id="uname">?</span></div>
+				<div><label>Uhrzeit: </label><span id="date">?</span></div>
+			</fieldset>
+			<fieldset>
+				<legend id="freifunk">Netz: Freifunk</legend>
+				<div><label>Nutzer: </label><span id="freifunk_user_count">?</span></div>
+				<div><label>Übertragen: </label><span id="freifunk_rx_data">?</span>↓ <span id="freifunk_tx_data">?</span>↑</div>
+				<div><label>Geschwindigkeit: </label><span id="freifunk_rx_speed">?</span>↓ <span id="freifunk_tx_speed">?</span>↑</div>
+				<div><label>IPv4 Adressen: </label><span id="freifunk_addr4">?</span></div>
+				<div><label>IPv6 Adressen: </label><span id="freifunk_addr6">?</span></div>
+			</fieldset>
+			<fieldset>
+				<legend id="lan">Netz: LAN</legend>
+				<div><label>Nutzer: </label><span id="lan_user_count">?</span></div>
+				<div><label>Übertragen: </label><span id="lan_rx_data">?</span>↓ <span id="lan_tx_data">?</span>↑</div>
+				<div><label>Geschwindigkeit: </label><span id="lan_rx_speed">?</span>↓ <span id="lan_tx_speed">?</span>↑</div>
+				<div><label>IPv4 Adressen: </label><span id="lan_addr4">?</span></div>
+				<div><label>IPv6 Adressen: </label><span id="lan_addr6">?</span></div>
+			</fieldset>
+			<fieldset>
+				<legend id="wan">Netz: WAN</legend>
+				<div><label>Internet Vorhanden: </label><span id="has_internet">?</span></div>
+				<div><label>Übertragen: </label><span id="wan_rx_data">?</span>↓ <span id="wan_tx_data">?</span>↑</div>
+				<div><label>Geschwindigkeit: </label><span id="wan_rx_speed">?</span>↓ <span id="wan_tx_speed">?</span>↑</div>
+				<div><label>IPv4 Adressen: </label><span id="wan_addr4">?</span></div>
+				<div><label>IPv6 Adressen: </label><span id="wan_addr6">?</span></div>
+			</fieldset>
+			<fieldset>
+				<legend id="software">Software</legend>
+				<div><label>Firmware Version: </label><span id="firmware_version">?</span></div>
+				<div><label>Openwrt Version: </label><span id="openwrt_version">?</span></div>
+				<div><label>Batman-Adv Version: </label><span id="batman_version">?</span></div>
+				<div><label>Fastd Version: </label><span id="fastd_version">?</span></div>
+			</fieldset>
+		</section>
+
+		<section id="settings">
+			<fieldset>
+				<legend>Allgemeine Einstellungen</legend>
+				<span id="general"></span>
+			</fieldset>
+			<fieldset>
+				<legend>Inhalte verkünden</legend>
+				<span id="resource"></span>
+				<div><br />Jeder Router kann einen Eintrag auf der Statusseite aller anderen Router anzeigen lassen. Dies soll helfen, Inhalte im Freifunknetz zu finden.</div>
+			</fieldset>
+			<fieldset>
+				<legend>Bandbreitenkontrolle</legend>
+				<span id="traffic"></span>
+				<div><br />Die für das Freifunknetz beanspruchte Internet-Bandbreite am WAN kann hier begrenzt werden.</div>
+			</fieldset>
+			<button type="button" onclick="save_data_settings()">Speichern</button>
+		</section>
+
+		<section id="network">
+			<div id="other"></div>
+			<div id="assignment"></div>
+			<div id="wireless"></div>
+			<div id="switches"></div>
+			<button type="button" onclick="save_data_network()">Speichern</button>
+		</section>
+
+		<section id="wifiscanner">
+			<fieldset id="wifiscan">
+				<legend>WLAN-Scan</legend>
+				<div>
+					<select id="wifiscan_selection"></select>
+					<button type="button" onclick="wifi_scan()">Scan starten</button>
+				</div>
+				<table id="wifiscan_table" style="display: none">
+					<tr>
+						<th>Name</th>
+						<th>BSS</th>
+						<th>Kanal</th>
+						<th>Signal</th>
+						<th>Typ</th>
+					</tr>
+					<tbody id="wifiscan_tbody"></tbody>
+				</table>
+			</fieldset>
+		</section>
+
+		<section id="upgrade">
+			<fieldset>
+				<legend>Aktuelle Firmware suchen</legend>
+				<div>
+					<button type="button" onclick="lookup_upgrade()">Suchen</button>
+					<button type="button" onclick="lookup_and_apply_upgrade()">Suchen und Aktualisieren</button>
+				</div>
+				<div><br />Die Freifunk-Community bietet neue Firmware-Versionen für die Router an.<br />Diese enthalten Fehlerbereinigungen und neue Funktionen.</div>
+			</fieldset>
+			<fieldset>
+				<legend>Router Zurücksetzen</legend>
+				<div>
+					<button type="button" onclick="restore_firmware()">Zurücksetzen</button>
+				</div>
+				<div><br />Alle Einstellungen werden zurückgesetzt und der Router startet neu.</div>
+			</fieldset>
+			<fieldset>
+				<legend>Manuelles Update</legend>
+				<div id="selected_image"></div>
+				<form action="/cgi-bin/upgrade" enctype="multipart/form-data" method="post">
+					<div class="radio_option">
+						<input type="file" id="import_file" name="firmware" onchange="$('selected_image').innerHTML=this.value.replace(/^.*[\\\/](.*)$/, '$1');" />
+						<input type="hidden" name="func" value="apply_firmware" />
+						<button type="button" onclick="$('import_file').click()">Image Ausw&auml;hlen</button>
+						<button type="submit">Senden</button>
+						<div style="margin-left: 2em;">
+							<input type="checkbox" name="keep_config" value="yes" checked>
+							<label>Konfiguration beibehalten</label>
+						</div>
+					</div>
+				</form>
+				<div><br />Hier kann ein Freifunk-Image verwendet werden (*-sysupgrade.bin) oder die Firmware des Routerherstellers.</div>
+			</fieldset>
+		</section>
+
+		<section id="password">
+			<fieldset>
+				<legend>Passwort</legend>
+				<div>
+					<label>Neues Password:</label> <input id="p1" type="password">
+				</div>
+				<div>
+					<label>Best&auml;tigung:</label> <input id="p2" type="password">
+				</div>
+				<p>Das Passwort sichert den Zugriff auf diese Weboberfl&auml;che ab, sowie den Direktzugriff auf den Router via <a href="https://de.wikipedia.org/wiki/Secure_Shell">SSH</a>. Der Benutzername lautet "root".</p>
+				<p>ACHTUNG: Es ist nicht m&ouml;glich hier ein leeres Passwort zu setzen!</p>
+			</fieldset>
+			<fieldset>
+				<legend>SSH Public Key</legend>
+				<div>
+					<label for="s1">SSH Public Key</label>
+					<textarea id="s1"></textarea>
+				</div>
+				<p>Der SSH Public Key dient zum sicheren Einloggen per SSH<br /></p>
+				<p>Ein hier eingetragener SSH Public Key wird hinzugef&uuml;gt! Die bisher bereits eingetragenen bleiben ebenfalls erhalten!</p>
+			</fieldset>
+			<div>
+				<button class="final-button" type="button" onclick="apply()">&Auml;ndern</button>
+			</div>
+		</section>
+
+	</main>
+
+	<footer>
+		<img src="footer.ffbsee.animated.svg" alt="Animated Footer" />
+	</footer>
 
 </body>
-</html>
 
+</html>
