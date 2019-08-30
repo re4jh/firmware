@@ -45,9 +45,22 @@ make menuconfig
 ```
 Now select the right "Target System" and "Target Profile" for your AP model:
 
-For example, for the TL-WR841ND v3, select:
+For example, for the TL-WR842ND v3, select:
 * `Target System => Atheros AR7xxx/AR9xxx`
 * `Target Profile => <*> TP-LINK TL-WR842N/ND v3`
+
+Or in case you have the TL-WR841N/ND v11, select:
+* `Target System => Atheros AR7xxx/AR9xxx`
+* `Subtarget => Devices with small flash`
+* `Target Profile => <*> TL-WR841N/ND v11`
+* `Global build settings => <*> Strip unnecessary exports from the kernel image`
+* `Global build settings => <*> Strip unnecessary functions from libraries`
+
+And deselect:
+* `Base system => < > logd`
+* `Base system => < > opkg`
+* `Network => < > ppp`
+* you may also strip svg images and disable USB, httpd, alfred if the space is still not enough
 
 Or in case you have the Ubiquiti UniFi Outdoor, select:
 * `Target System => Atheros AR7xxx/AR9xxx`
@@ -69,6 +82,14 @@ Now start the build process. This takes some time:
 ```bash
 make -j 3
 ```
+
+In case the image was not build you should run the following command, which activates full output and also shows image size
+```bash
+make V=sc
+```
+
+**!!!Please note that you may need to compile with one thread `make -j1` and you may need to `make clean` or `make dirclean` when switching between Flash sizes to recompile and do the strip correct.!!!**
+
 
 The **firmware image files** will be stored in the `bin`-folder. These images can now directly be used to update your router. Please note, that two differnt image types (per router) will be provided:
 
