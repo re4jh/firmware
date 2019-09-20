@@ -686,8 +686,8 @@ update_200() {
 	cp /rom/etc/uhttpd.crt /etc/ 2> /dev/null
 	cp /rom/etc/uhttpd.key /etc/ 2> /dev/null
 
-	cp /rom/etc/profile /rom/etc/profile
-	cp /rom/etc/group /rom/etc/group
+	cp /rom/etc/profile /etc/profile
+	cp /rom/etc/group /etc/group
 
 	cp /rom/etc/crontabs/root /etc/crontabs 2> /dev/null
 
@@ -943,7 +943,7 @@ start()
                         update_version
                         ;;
 		2.0.0*)
-                        echo "(I) Apply 2.0.0 update."
+                        echo "(I) Apply 2.0.0 to 2.2.0 update."
                         update_200
                         update_version
                         ;;
