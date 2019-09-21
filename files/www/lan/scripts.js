@@ -2049,8 +2049,8 @@ function init_wifiscan() {
 			if (interfaces.length === 0) {
 				continue;
 			}
-			for (let interface in interfaces) {
-				var ifname = interfaces[interface].ifname;
+			for (let aninterface in interfaces) {
+				var ifname = interfaces[aninterface].ifname;
 				if (typeof(ifname) === 'string') {
 					add_list_entry(device, ifname);
 				}
