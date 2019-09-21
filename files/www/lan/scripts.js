@@ -905,10 +905,11 @@ function save_data_settings() {
 				name: name,
 				data: data
 			},
-			function (data) {
-				$('msg').innerHTML = data;
-				$('msg').focus();
-				init();
+			function(data) {
+				if (data.length > 0) {
+					setText('msg', data);
+					init_settings();
+				}
 			}
 		);
 	}
@@ -1933,9 +1934,10 @@ function save_data_network() {
 				data: data
 			},
 			function(data) {
-				$('msg').innerHTML = data;
-				$('msg').focus();
-				init();
+				if (data.length > 0) {
+					setText('msg', data);
+					init_network();
+				}
 			}
 		);
 	}
