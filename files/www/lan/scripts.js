@@ -3,7 +3,7 @@
 function initialShow() {
 	var mysection = 'home';
 	if (location.hash != '') {
-		mysection = location.hash.replace(/^(#section_)/,"");;
+		mysection = location.hash.replace(/^(#section_)/, "");
 	}
 	section_toggle(mysection);
 	setTitle();
@@ -32,10 +32,8 @@ function section_toggle(section_selector) {
 		case 'settings':
 			init_settings();
 			break;
-			/*
-		case 'upgrade':
-			break;
-			*/
+		/*	case 'upgrade':
+            break; */
 		case 'password':
 			init_password();
 			break;
@@ -76,8 +74,7 @@ function removeClass(e, c) {
 
 function setText(id, txt) {
 	$('#' + id).innerHTML = txt;
-	if(id === 'msg' && txt !=='')
-	{
+	if (id === 'msg' && txt !== '') {
 		show($('#msg'));
 	}
 }
@@ -540,9 +537,8 @@ jx = {
 	}
 }
 
-/* impoted from index.js */
+/* imported from index.js */
 var html_cache = {};
-var js_cache = {};
 var adv_mode = false;
 
 function adv_apply() {
@@ -568,7 +564,7 @@ function nav_onclick() {
 
 	var id = url.substring(0, url.lastIndexOf('.'));
 
-	var process_html = function (data) {
+	var process_html = function(data) {
 		var b = $("body");
 		removeChilds(b);
 		var pattern = /<body[^>]*>((.|[\n\r])*)<\/body>/im;
@@ -576,26 +572,11 @@ function nav_onclick() {
 		html_cache[id] = data;
 	};
 
-	var process_js = function (data) {
-		(window.execScript || function (data) {
-			window["eval"].call(window, data);
-			window["eval"].call(window, "init();");
-		})(data);
-		js_cache[id] = data;
-	};
-
 	//load html file
 	if (id in html_cache) {
 		process_html(html_cache[id]);
 	} else {
 		jx.load(url, process_html, 'text');
-	}
-
-	//load javascript file
-	if (id in js_cache) {
-		process_js(js_cache[id]);
-	} else {
-		jx.load(url.replace(".html", ".js"), process_js, 'text');
 	}
 
 	onDesc($("#globalnav"), 'UL', function (n) {
