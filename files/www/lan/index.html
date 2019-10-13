@@ -154,9 +154,9 @@
 				<div id="selected_image"></div>
 				<form action="/cgi-bin/upgrade" enctype="multipart/form-data" method="post">
 					<div class="radio_option">
-						<input type="file" id="import_file" name="firmware" onchange="$('selected_image').innerHTML=this.value.replace(/^.*[\\\/](.*)$/, '$1');" />
+						<input type="file" id="import_file" name="firmware" onchange="$('#selected_image').innerHTML=this.value.replace(/^.*[\\\/](.*)$/, '$1');" />
 						<input type="hidden" name="func" value="apply_firmware" />
-						<button type="button" onclick="$('import_file').click()">Image Ausw&auml;hlen</button>
+						<button type="button" onclick="$('#import_file').click()">Image Ausw&auml;hlen</button>
 						<button type="submit">Senden</button>
 						<div style="margin-left: 2em;">
 							<input type="checkbox" name="keep_config" value="yes" checked>
