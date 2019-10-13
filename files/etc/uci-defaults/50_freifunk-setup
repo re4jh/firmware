@@ -722,6 +722,9 @@ update_200() {
 	initial_batman_setup
 
 	uci commit network
+	
+	# update autoupdater keys
+	cp /rom/etc/config/autoupdater /etc/config/autoupdater 2> /dev/null
 }
 
 start()
