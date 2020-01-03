@@ -2112,6 +2112,10 @@ function lookup_and_apply_upgrade() {
 
 	setText('msg', 'Versuche Updateserver zu erreichen. Bitte warten ...');
 	send("/cgi-bin/upgrade", { func : 'lookup_and_apply_upgrade' }, function(text) {
-		setText('msg', text);
+		if (text.length == 0) {
+			setText('msg', 'Update wird durchgef\xFChrt');
+		} else {
+			setText('msg', text);
+		}
 	});
 }
