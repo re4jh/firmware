@@ -20,7 +20,7 @@ config peer_group 'backbone'
 	option net 'default'
 	option peer_limit '1'
 
-config peer 'gw01'
+config peer 'gw01_1250'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -29,7 +29,7 @@ config peer 'gw01'
     list remote 'ipv4 "speedtest5.gw01.ffbsee.net" port 1250'
     option float 0
 
-config peer 'gw02'
+config peer 'gw02_1250'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -38,7 +38,7 @@ config peer 'gw02'
     list remote 'ipv4 "speedtest5.gw02.ffbsee.net" port 1250'
     option float 0
 
-config peer 'gw03'
+config peer 'gw03_1250'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -47,7 +47,7 @@ config peer 'gw03'
     list remote 'ipv4 "speedtest5.gw03.ffbsee.net" port 1250'
     option float 0
 
-config peer 'gw04'
+config peer 'gw04_1250'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -56,7 +56,7 @@ config peer 'gw04'
     list remote 'ipv4 "speedtest5.gw04.ffbsee.net" port 1250'
     option float 0
 
-config peer 'gw01'
+config peer 'gw01_1251'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -65,7 +65,7 @@ config peer 'gw01'
     list remote 'ipv4 "speedtest5.gw01.ffbsee.net" port 1251'
     option float 0
 
-config peer 'gw02'
+config peer 'gw02_1251'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -74,7 +74,7 @@ config peer 'gw02'
     list remote 'ipv4 "speedtest5.gw02.ffbsee.net" port 1251'
     option float 0
 
-config peer 'gw03'
+config peer 'gw03_1251'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -83,7 +83,7 @@ config peer 'gw03'
     list remote 'ipv4 "speedtest5.gw03.ffbsee.net" port 1251'
     option float 0
 
-config peer 'gw04'
+config peer 'gw04_1251'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -93,7 +93,7 @@ config peer 'gw04'
     option float 0
 
 
-config peer 'gw01'
+config peer 'gw01_1252'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -102,7 +102,7 @@ config peer 'gw01'
     list remote 'ipv4 "speedtest5.gw01.ffbsee.net" port 1252'
     option float 0
 
-config peer 'gw02'
+config peer 'gw02_1252'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -111,7 +111,7 @@ config peer 'gw02'
     list remote 'ipv4 "speedtest5.gw02.ffbsee.net" port 1252'
     option float 0
 
-config peer 'gw03'
+config peer 'gw03_1252'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -120,7 +120,7 @@ config peer 'gw03'
     list remote 'ipv4 "speedtest5.gw03.ffbsee.net" port 1252'
     option float 0
 
-config peer 'gw04'
+config peer 'gw04_1252'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -129,7 +129,7 @@ config peer 'gw04'
     list remote 'ipv4 "speedtest5.gw04.ffbsee.net" port 1252'
     option float 0
 
-config peer 'gw01'
+config peer 'gw01_1253'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -138,7 +138,7 @@ config peer 'gw01'
     list remote 'ipv4 "speedtest5.gw01.ffbsee.net" port 1253'
     option float 0
 
-config peer 'gw02'
+config peer 'gw02_1253'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -147,7 +147,7 @@ config peer 'gw02'
     list remote 'ipv4 "speedtest5.gw02.ffbsee.net" port 1253'
     option float 0
 
-config peer 'gw03'
+config peer 'gw03_1253'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -156,7 +156,7 @@ config peer 'gw03'
     list remote 'ipv4 "speedtest5.gw03.ffbsee.net" port 1253'
     option float 0
 
-config peer 'gw04'
+config peer 'gw04_1253'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -165,7 +165,7 @@ config peer 'gw04'
     list remote 'ipv4 "speedtest5.gw04.ffbsee.net" port 1253'
     option float 0
 
-config peer 'gw01'
+config peer 'gw01_1254'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -174,7 +174,7 @@ config peer 'gw01'
     list remote 'ipv4 "speedtest5.gw01.ffbsee.net" port 1254'
     option float 0
 
-config peer 'gw02'
+config peer 'gw02_1254'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -183,7 +183,7 @@ config peer 'gw02'
     list remote 'ipv4 "speedtest5.gw02.ffbsee.net" port 1254'
     option float 0
 
-config peer 'gw03'
+config peer 'gw03_1254'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -192,7 +192,7 @@ config peer 'gw03'
     list remote 'ipv4 "speedtest5.gw03.ffbsee.net" port 1254'
     option float 0
 
-config peer 'gw04'
+config peer 'gw04_1254'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -201,7 +201,7 @@ config peer 'gw04'
     list remote 'ipv4 "speedtest5.gw04.ffbsee.net" port 1254'
     option float 0
 
-config peer 'gw01'
+config peer 'gw01_1255'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -210,7 +210,7 @@ config peer 'gw01'
     list remote 'ipv4 "speedtest5.gw01.ffbsee.net" port 1255'
     option float 0
 
-config peer 'gw02'
+config peer 'gw02_1255'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -219,7 +219,7 @@ config peer 'gw02'
     list remote 'ipv4 "speedtest5.gw02.ffbsee.net" port 1255'
     option float 0
 
-config peer 'gw03'
+config peer 'gw03_1255'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -228,7 +228,7 @@ config peer 'gw03'
     list remote 'ipv4 "speedtest5.gw03.ffbsee.net" port 1255'
     option float 0
 
-config peer 'gw04'
+config peer 'gw04_1255'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -237,7 +237,7 @@ config peer 'gw04'
     list remote 'ipv4 "speedtest5.gw04.ffbsee.net" port 1255'
     option float 0
 
-config peer 'gw01'
+config peer 'gw01_1256'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -246,7 +246,7 @@ config peer 'gw01'
     list remote 'ipv4 "speedtest5.gw01.ffbsee.net" port 1256'
     option float 0
 
-config peer 'gw02'
+config peer 'gw02_1256'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -255,7 +255,7 @@ config peer 'gw02'
     list remote 'ipv4 "speedtest5.gw02.ffbsee.net" port 1256'
     option float 0
 
-config peer 'gw03'
+config peer 'gw03_1256'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -264,7 +264,7 @@ config peer 'gw03'
     list remote 'ipv4 "speedtest5.gw03.ffbsee.net" port 1256'
     option float 0
 
-config peer 'gw04'
+config peer 'gw04_1256'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -273,7 +273,7 @@ config peer 'gw04'
     list remote 'ipv4 "speedtest5.gw04.ffbsee.net" port 1256'
     option float 0
 
-config peer 'gw01'
+config peer 'gw01_1257'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -282,7 +282,7 @@ config peer 'gw01'
     list remote 'ipv4 "speedtest5.gw01.ffbsee.net" port 1257'
     option float 0
 
-config peer 'gw02'
+config peer 'gw02_1257'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -291,7 +291,7 @@ config peer 'gw02'
     list remote 'ipv4 "speedtest5.gw02.ffbsee.net" port 1257'
     option float 0
 
-config peer 'gw03'
+config peer 'gw03_1257'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -300,7 +300,7 @@ config peer 'gw03'
     list remote 'ipv4 "speedtest5.gw03.ffbsee.net" port 1257'
     option float 0
 
-config peer 'gw04'
+config peer 'gw04_1257'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -309,7 +309,7 @@ config peer 'gw04'
     list remote 'ipv4 "speedtest5.gw04.ffbsee.net" port 1257'
     option float 0
 
-config peer 'gw01'
+config peer 'gw01_1258'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -318,7 +318,7 @@ config peer 'gw01'
     list remote 'ipv4 "speedtest5.gw01.ffbsee.net" port 1258'
     option float 0
 
-config peer 'gw02'
+config peer 'gw02_1258'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -327,7 +327,7 @@ config peer 'gw02'
     list remote 'ipv4 "speedtest5.gw02.ffbsee.net" port 1258'
     option float 0
 
-config peer 'gw03'
+config peer 'gw03_1258'
     option enabled 1
     option net 'default'
     option group 'backbone'
@@ -336,7 +336,7 @@ config peer 'gw03'
     list remote 'ipv4 "speedtest5.gw03.ffbsee.net" port 1258'
     option float 0
 
-config peer 'gw04'
+config peer 'gw04_1258'
     option enabled 1
     option net 'default'
     option group 'backbone'
