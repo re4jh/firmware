@@ -989,7 +989,7 @@ start()
                         ;;
 		2.2.0)
 			echo "(I) Apply 2.2.0 to 2.3.0 update."
-                        update_230
+                        update_220
                         update_version
                         ;;
 
