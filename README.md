@@ -27,7 +27,7 @@ git clone git://git.openwrt.org/source.git
 cd source
 git reset --hard 5feb0df9bb3bd83ec49af17d2abc261fc58e2551 
 
-git clone -b 2.3.0 https://github.com/ffbsee/ffbsee-firmware.git
+git clone https://github.com/ffbsee/ffbsee-firmware.git
 cd ffbsee-firmware
 ./minify-webstuff.sh
 cd ..
