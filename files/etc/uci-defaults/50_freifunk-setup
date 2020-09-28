@@ -727,6 +727,25 @@ update_200() {
 	cp /rom/etc/config/autoupdater /etc/config/autoupdater 2> /dev/null
 }
 
+update_220() {
+
+	# Preserve self signed certificates
+	cp /rom/etc/uhttpd.crt /etc/ 2> /dev/null
+	cp /rom/etc/uhttpd.key /etc/ 2> /dev/null
+
+	uci set system.@system[0].timezone='CET-1CEST,M3.5.0,M10.5.0/3'
+	uci commit system
+
+	cp /rom/etc/config/fastd /etc/config/fastd
+
+	uci set network.bat0.gw_mode=client
+	uci set network.bat0.aggregated_ogms=1
+	uci set network.bat0.bridge_loop_avoidance=1
+	uci set network.bat0.distributed_arp_table=1
+	uci commit network
+
+}
+
 start()
 {
 	echo "(I) Start freifunk_setup"
@@ -761,6 +780,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
 			update_version
 			;;
 		0.0.3*)
@@ -777,6 +797,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
 			update_version
 			;;
 		0.0.4*)
@@ -792,6 +813,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
 			update_version
 			;;
 		0.0.5*)
@@ -806,6 +828,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
 			update_version
 			;;
 		0.0.6*)
@@ -819,6 +842,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
 			update_version
 			;;
 		0.1.0*)
@@ -832,6 +856,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
                         update_version
                         ;;
                 0.6.0*)
@@ -844,6 +869,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
                         update_version
                         ;;
                 0.6.1*)
@@ -856,6 +882,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
                         update_version
                         ;;
 		0.6.2*)
@@ -868,6 +895,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
 			update_version
 			;;
 		0.6.3*)
@@ -880,6 +908,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
 			update_version
 			;;
 		0.6.4*)
@@ -892,6 +921,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
 			update_version
 			;;
 		0.7.0*)
@@ -903,6 +933,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
 			update_version
 			;;
 		1.0.3*)
@@ -913,6 +944,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
                         update_version
                         ;;
 		1.0.5*)
@@ -922,6 +954,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
                         update_version
                         ;;
 		1.1.1*)
@@ -930,6 +963,7 @@ start()
 			update_114
 			update_122
 			update_200
+			update_220
                         update_version
                         ;;
 		1.1.4*)
@@ -937,17 +971,25 @@ start()
                         update_114
 			update_122
 			update_200
+			update_220
                         update_version
                         ;;
 		1.2.2*)
                         echo "(I) Apply 1.2.2 update."
                         update_122
                         update_200
+			update_220
                         update_version
                         ;;
 		2.0.*)
                         echo "(I) Apply 2.0.x to 2.2.0 update."
                         update_200
+			update_220
+                        update_version
+                        ;;
+		2.2.0)
+			echo "(I) Apply 2.2.0 to 2.3.0 update."
+                        update_220
                         update_version
                         ;;
 
