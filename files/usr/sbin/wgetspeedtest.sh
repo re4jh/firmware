@@ -1,20 +1,20 @@
 #!/bin/sh
-MYWANGW=$(ip route show default | grep -oE 'via .* dev' | grep -oE '((1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])')
-HOSTv4=$(nslookup "speed.hetzner.de" | grep -oE "^Address .*" | grep -oE '((1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])')
+TESTIP=$(nslookup "speed.hetzner.de" | grep -oE "^Address .*" | grep -oE '([a-f0-9:]+:+)+[a-f0-9]+')
+TESTURL="https://speed.hetzner.de/100MB.bin"
 AMOUNT=$((100 * 8))
 MYFFGW=$(sockread /var/run/fastd.status < /dev/null 2> /dev/null | sed 's/\(.*\)"name": "gw\([0-9]*\)[^"]*"\(.*\)established\(.*\)/\2/g')
 case $MYFFGW in
   01)
-    MYFFGWIP="10.15.224.1"
+    MYFFGWIP="fdef:1701:b5ee:23::1"
     ;;
   02)
-    MYFFGWIP="10.15.224.2"
+    MYFFGWIP="fdef:1701:b5ee:23::2"
     ;;
   03)
-    MYFFGWIP="10.15.224.3"
+    MYFFGWIP="fdef:1701:b5ee:23::3"
     ;;
   04)
-    MYFFGWIP="10.15.224.4"
+    MYFFGWIP="fdef:1701:b5ee:23::4"
     ;;
   *)
     echo "Unknown FF-Gateway: GW"$MYFFGW
@@ -22,17 +22,14 @@ case $MYFFGW in
     ;;
 esac
 
-ip route add $HOSTv4/32 via $MYWANGW
 STARTWAN=$(date +%s)
-wget -4 -q --no-check-certificate -O /dev/null "https://speed.hetzner.de/100MB.bin"
+wget -6 -q --no-check-certificate -O /dev/null $TESTURL
 wgetreturn=$?
 if [[ $wgetreturn = 0 ]]; then
  ENDWAN=$(date +%s)
  echo "WAN Download Done"
- ip route del $HOSTv4/32 via $MYWANGW
 else
  echo "ERROR: Wan-Wget-Download failed."
- ip route del $HOSTv4/32 via $MYWANGW
  exit
 fi
 
@@ -43,18 +40,19 @@ echo "WAN: "$AMOUNT "Mbit in " $DURATIONWAN " seconds."
 echo "That's " $RESULTWAN "Mbit/s."
 echo
 
+GWPING=$(ping -I br-freifunk -c 3 -n $MYFFGWIP | grep "round-trip min" | grep -oE '([0-9][0-9\.\/]*)' | sed -r 's/[0-9\.]+\/([0-9\.]+)\/[0-9\.]+/\1/g')
 
-ip route add $HOSTv4/32 via $MYFFGWIP
+ip route add $TESTIP/128 via $MYFFGWIP
 STARTFF=$(date +%s)
-wget -4 -q --no-check-certificate -O /dev/null "https://speed.hetzner.de/100MB.bin"
+wget -6 -q --no-check-certificate -O /dev/null $TESTURL
 wgetreturn=$?
 if [[ $wgetreturn = 0 ]]; then
  ENDFF=$(date +%s)
  echo "FF Download Done"
- ip route del $HOSTv4/32 via $MYFFGWIP
+ ip route del $TESTIP/128 via $MYFFGWIP
 else
  echo "ERROR: FF-Wget-Download failed.($wgetreturn)"
- ip route del $HOSTv4/32 via $MYFFGWIP
+ ip route del $TESTIP/128 via $MYFFGWIP
  exit
 fi
 
@@ -66,7 +64,8 @@ echo "That's " $RESULTFF "Mbit/s."
 echo
 
 if [ "$1" = "-w" ]; then
-  echo $RESULTFF > last_speedtest_ff_mbps.txt
-  echo $RESULTWAN > last_speedtest_wan_mbps.txt
-  echo $STARTWAN > last_speedtest_ts.txt
+  echo $RESULTFF > /tmp/log/last_speedtest_ff_mbps.txt
+  echo $RESULTWAN > /tmp/log/last_speedtest_wan_mbps.txt
+  echo $GWPING > /tmp/log/last_gwping.txt
+  echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
 fi
