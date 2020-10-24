@@ -2,6 +2,8 @@
 0 */6 * * * /usr/sbin/autoupdater
 # Publish map data
 */5 * * * * /usr/sbin/print_map.sh -p
+# Publish speedtest data
+*/7 * * * * /usr/sbin/robin_print_map.sh -p > /dev/null
 # Publish service data
 */5 * * * * /usr/sbin/print_service.sh -p
 # Reboot every 5 days at 04:05
