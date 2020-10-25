@@ -35,8 +35,8 @@ tx_bytes=$(cat /sys/class/net/br-freifunk/statistics/tx_bytes)
 
 content="{"
 
-[ -n "$wan_mbps" ] && content=$content"\"downstream_mbits_wan\" : $wan_mbps, "
-[ -n "$ff_mbps" ] && content=$content"\"downstream_mbits_ff\" : $ff_mbps, "
+[ -n "$wan_mbps" ] && content=$content"\"downstream_mbps_wan\" : $wan_mbps, "
+[ -n "$ff_mbps" ] && content=$content"\"downstream_mbps_ff\" : $ff_mbps, "
 [ -n "$speed_ping" ] && content=$content"\"gw_ping_ms\" : $speed_ping, "
 [ -n "$speed_when" ] && content=$content"\"tested_when\" : \"$speed_when\", "
 [ -n "$rx_bytes" ] && content=$content"\"rx_bytes\" : $rx_bytes, "
