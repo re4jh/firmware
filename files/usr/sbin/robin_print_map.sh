@@ -1,10 +1,23 @@
 #!/bin/sh
 #Print out local connection data for map creation
 
-# get a speedtestresult if none is found
-[ ! -f /tmp/log/last_speedtest_ts.txt ] && ./wgetspeedtest.sh -w
+# do not do anything without maplevel "all"
+map_level="$(uci -q get freifunk.@settings[0].publish_map 2> /dev/null)"
+[[ $map_level != "all" ]] && exit 0
+
+# exit if uptime is less than an hour
+uptime=$(awk '{print(int($1))}' /proc/uptime)
+[[ $uptime -lt 3600 ]] && exit 0
+
+# if no offset known play the dice and set one
+[[ ! -f /tmp/log/random_offset.txt ]] && echo $[ $RANDOM % 43200 + 0 ] > /tmp/log/random_offset.txt
+offset=$(cat /tmp/log/random_offset.txt)
+
+# declare last speedtest done 6 days ago if no other declaration found
+[[ ! -f /tmp/log/last_speedtest_ts.txt ]] && awk "BEGIN {print $(date +%s) - 3600 * 24 * 6}" > /tmp/log/last_speedtest_ts.txt
+
 # get a speedtestresult if the one found is older than 1 day
-[[ $(cat /tmp/log/last_speedtest_ts.txt) -lt $(awk "BEGIN {print $(date +%s) - 3600 * 24}") ]]  && ./wgetspeedtest.sh -w
+[[ $(cat /tmp/log/last_speedtest_ts.txt) -lt $(awk "BEGIN {print $(date +%s) - 3600 * 24 * 6 + $offset}") ]]  && ./wgetspeedtest.sh -w
 
 wan_mbps=$(cat /tmp/log/last_speedtest_wan_mbps.txt)
 ff_mbps=$(cat /tmp/log/last_speedtest_ff_mbps.txt)
@@ -39,5 +52,5 @@ if [ "$1" = "-p" ]; then
 		echo "nothing published"
 	fi
 else
-	echo  $content
+	echo  "$content"
 fi
