@@ -1,5 +1,6 @@
 #!/bin/sh
-#Print out local connection data for map creation
+
+# Print out local connection data for map creation
 
 # do not do anything without maplevel "all"
 map_level="$(uci -q get freifunk.@settings[0].publish_map 2> /dev/null)"
@@ -10,20 +11,23 @@ uptime=$(awk '{print(int($1))}' /proc/uptime)
 [[ $uptime -lt 3600 ]] && exit 0
 
 # if no offset known play the dice and set one
-[[ ! -f /tmp/log/random_offset.txt ]] && echo $[ $RANDOM % 43200 + 0 ] > /tmp/log/random_offset.txt
+[[ ! -f /tmp/log/random_offset.txt ]] && awk -v min=0 -v max=43200 'BEGIN{srand(); print int(min+rand()*(max-min+1))}' > /tmp/log/random_offset.txt
 offset=$(cat /tmp/log/random_offset.txt)
 
 # declare last speedtest done 6 days ago if no other declaration found
 [[ ! -f /tmp/log/last_speedtest_ts.txt ]] && awk "BEGIN {print $(date +%s) - 3600 * 24 * 6}" > /tmp/log/last_speedtest_ts.txt
 
 # get a speedtestresult if the one found is older than 1 day
-[[ $(cat /tmp/log/last_speedtest_ts.txt) -lt $(awk "BEGIN {print $(date +%s) - 3600 * 24 * 6 + $offset}") ]]  && ./wgetspeedtest.sh -w
+if [ $(cat /tmp/log/last_speedtest_ts.txt) -lt $(awk "BEGIN {print $(date +%s) - 3600 * 24 * 6 + $offset}") ]; then
+  ./wgetspeedtest.sh -w
+else
+  echo "offset + last timestamp to less for a new test."
+fi
 
 wan_mbps=$(cat /tmp/log/last_speedtest_wan_mbps.txt)
 ff_mbps=$(cat /tmp/log/last_speedtest_ff_mbps.txt)
-
-# speed_ping=$(cat speedtestresult.json | jq '.ping')
 test_ts=$(cat /tmp/log/last_speedtest_ts.txt)
+
 speed_when=$(date -d @$test_ts +'%Y-%m-%d %H:%M:%S')
 rx_bytes=$(cat /sys/class/net/br-freifunk/statistics/rx_bytes)
 tx_bytes=$(cat /sys/class/net/br-freifunk/statistics/tx_bytes)
