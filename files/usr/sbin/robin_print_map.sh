@@ -27,6 +27,7 @@ fi
 wan_mbps=$(cat /tmp/log/last_speedtest_wan_mbps.txt)
 ff_mbps=$(cat /tmp/log/last_speedtest_ff_mbps.txt)
 test_ts=$(cat /tmp/log/last_speedtest_ts.txt)
+speed_ping=$(cat /tmp/log/last_gwping.txt)
 
 speed_when=$(date -d @$test_ts +'%Y-%m-%d %H:%M:%S')
 rx_bytes=$(cat /sys/class/net/br-freifunk/statistics/rx_bytes)
@@ -36,6 +37,7 @@ content="{"
 
 [ -n "$wan_mbps" ] && content=$content"\"downstream_mbits_wan\" : $wan_mbps, "
 [ -n "$ff_mbps" ] && content=$content"\"downstream_mbits_ff\" : $ff_mbps, "
+[ -n "$speed_ping" ] && content=$content"\"gw_ping_ms\" : $speed_ping, "
 [ -n "$speed_when" ] && content=$content"\"tested_when\" : \"$speed_when\", "
 [ -n "$rx_bytes" ] && content=$content"\"rx_bytes\" : $rx_bytes, "
 [ -n "$tx_bytes" ] && content=$content"\"tx_bytes\" : $tx_bytes"
