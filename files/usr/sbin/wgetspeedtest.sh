@@ -22,15 +22,25 @@ case $MYFFGW in
     ;;
 esac
 
+echo "Active FF-Gateway: GW"$MYFFGW
+
 STARTWAN=$(date +%s)
 wget -6 -q --no-check-certificate -O /dev/null $TESTURL
 wgetreturn=$?
 if [[ $wgetreturn = 0 ]]; then
  ENDWAN=$(date +%s)
- echo "WAN Download Done"
+ echo "WAN Download via IPv6 done"
 else
- echo "ERROR: Wan-Wget-Download failed."
- exit
+ echo "ERROR: Wan-Wget-Download via IPv6 failed."
+ STARTWAN=$(date +%s)
+ wget -4 -q --no-check-certificate -O /dev/null $TESTURL
+ if [[ $wgetreturn = 0 ]]; then
+  ENDWAN=$(date +%s)
+  echo "WAN Download via IPv4 done."
+ else
+  echo "ERROR: Wan-Wget-Download via IPv4 failed, too."
+  exit
+ fi
 fi
 
 DURATIONWAN=$(awk "BEGIN {print $ENDWAN - $STARTWAN}")
