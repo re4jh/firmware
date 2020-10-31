@@ -1,7 +1,8 @@
 #!/bin/sh
-TESTIP=$(nslookup "speed.hetzner.de" | grep -oE "^Address .*" | grep -oE '([a-f0-9:]+:+)+[a-f0-9]+')
-TESTURL="https://speed.hetzner.de/100MB.bin"
-AMOUNT=$((100 * 8))
+TESTIP=$(nslookup "ipv6.download.thinkbroadband.com" | grep -oE "^Address .*" | grep -oE '([a-f0-9:]+:+)+[a-f0-9]+')
+TESTURL4="http://ipv4.download.thinkbroadband.com/5MB.zip"
+TESTURL6="http://ipv6.download.thinkbroadband.com/5MB.zip"
+AMOUNT=$((5 * 8))
 MYFFGW=$(sockread /var/run/fastd.status < /dev/null 2> /dev/null | sed 's/\(.*\)"name": "gw\([0-9]*\)[^"]*"\(.*\)established\(.*\)/\2/g')
 case $MYFFGW in
   01)
@@ -30,7 +31,7 @@ echo "Active FF-Gateway: GW"$MYFFGW
 echo 
 echo "Starting Download-Tests with $AMOUNT Mbits on " $(date) 
 STARTWAN=$(date +%s)
-wget -4 -q --no-check-certificate -O /dev/null $TESTURL
+wget -4 -q -O /dev/null $TESTURL4
 wgetreturn=$?
 if [[ $wgetreturn = 0 ]]; then
  ENDWAN=$(date +%s)
@@ -38,7 +39,7 @@ if [[ $wgetreturn = 0 ]]; then
 else
  echo "ERROR: Wan-Wget-Download via IPv4 failed."
  STARTWAN=$(date +%s)
- wget -6 -q --no-check-certificate -O /dev/null $TESTURL
+ wget -6 -q -O /dev/null $TESTURL6
  if [[ $wgetreturn = 0 ]]; then
   ENDWAN=$(date +%s)
   echo "WAN Download via IPv6 done."
@@ -61,7 +62,7 @@ GWPING=$(ping -I br-freifunk -c 3 -n $MYFFGWIP | grep "round-trip min" | grep -o
 echo "Initiating Wget-Speedtest via br-freifunk"
 ip route add $TESTIP/128 via $MYFFGWIP
 STARTFF=$(date +%s)
-wget -6 -q --no-check-certificate -O /dev/null $TESTURL
+wget -6 -q -O /dev/null $TESTURL6
 wgetreturn=$?
 if [[ $wgetreturn = 0 ]]; then
  ENDFF=$(date +%s)
