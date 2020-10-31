@@ -22,7 +22,12 @@ case $MYFFGW in
     ;;
 esac
 
+echo "Starting WGET-Speedtests"
+echo "========================"
+echo 
+
 echo "Active FF-Gateway: GW"$MYFFGW
+echo 
 echo "Starting Download-Tests with $AMOUNT Mbits on " $(date) 
 STARTWAN=$(date +%s)
 wget -4 -q --no-check-certificate -O /dev/null $TESTURL
@@ -50,8 +55,10 @@ echo "WAN: "$AMOUNT "Mbit in " $DURATIONWAN " seconds."
 echo "That's " $RESULTWAN "Mbit/s."
 echo
 
+echo "Pinging my Gateway: $MYFFGW at $MYFFGWIP"
 GWPING=$(ping -I br-freifunk -c 3 -n $MYFFGWIP | grep "round-trip min" | grep -oE '([0-9][0-9\.\/]*)' | sed -r 's/[0-9\.]+\/([0-9\.]+)\/[0-9\.]+/\1/g')
 
+echo "Initiating Wget-Speedtest via br-freifunk"
 ip route add $TESTIP/128 via $MYFFGWIP
 STARTFF=$(date +%s)
 wget -6 -q --no-check-certificate -O /dev/null $TESTURL
