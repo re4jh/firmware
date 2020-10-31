@@ -37,14 +37,15 @@ if [[ $wgetreturn = 0 ]]; then
  ENDWAN=$(date +%s)
  echo "WAN Download via IPv4 done"
 else
- echo "ERROR: Wan-Wget-Download via IPv4 failed."
+ echo "ERROR: WAN-Wget-Download via IPv4 failed. (Exit-Code: $wgetreturn)"
  STARTWAN=$(date +%s)
  wget -6 -q -O /dev/null $TESTURL6
+ wgetreturn=$?
  if [[ $wgetreturn = 0 ]]; then
   ENDWAN=$(date +%s)
   echo "WAN Download via IPv6 done."
  else
-  echo "ERROR: Wan-Wget-Download via IPv6 failed, too."
+  echo "ERROR: WAN-Wget-Download via IPv6 failed. (Exit-Code: $wgetreturn)"
   exit
  fi
 fi
@@ -58,6 +59,8 @@ echo
 
 echo "Pinging my Gateway: $MYFFGW at $MYFFGWIP"
 GWPING=$(ping -I br-freifunk -c 3 -n $MYFFGWIP | grep "round-trip min" | grep -oE '([0-9][0-9\.\/]*)' | sed -r 's/[0-9\.]+\/([0-9\.]+)\/[0-9\.]+/\1/g')
+echo "Ping-Duration: $GWPING ms"
+echo
 
 echo "Initiating Wget-Speedtest via br-freifunk"
 ip route add $TESTIP/128 via $MYFFGWIP
@@ -69,7 +72,7 @@ if [[ $wgetreturn = 0 ]]; then
  echo "FF Download Done"
  ip route del $TESTIP/128 via $MYFFGWIP
 else
- echo "ERROR: FF-Wget-Download failed.($wgetreturn)"
+ echo "ERROR: FF-Wget-Download failed. (Exit-Code: $wgetreturn)"
  ip route del $TESTIP/128 via $MYFFGWIP
  exit
 fi
