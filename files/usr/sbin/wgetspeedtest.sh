@@ -23,7 +23,7 @@ case $MYFFGW in
 esac
 
 echo "Active FF-Gateway: GW"$MYFFGW
-
+echo "Starting Download-Tests with $AMOUNT Mbits on " $(date) 
 STARTWAN=$(date +%s)
 wget -4 -q --no-check-certificate -O /dev/null $TESTURL
 wgetreturn=$?
@@ -72,6 +72,8 @@ RESULTFF=$(awk "BEGIN {print $AMOUNT/$DURATIONFF}")
 echo "FF: "$AMOUNT "Mbit in " $DURATIONFF " seconds."
 echo "That's " $RESULTFF "Mbit/s."
 echo
+echo "All Download-Tests finished. " $(date) 
+echo 
 
 if [ "$1" = "-w" ]; then
   echo $RESULTFF > /tmp/log/last_speedtest_ff_mbps.txt
