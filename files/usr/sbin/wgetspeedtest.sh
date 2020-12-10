@@ -135,6 +135,7 @@ echo "All Download-Tests finished. " $(date)
 echo 
 
 if [ "$1" = "-w" ]; then
+  mkdir -p /tmp/
   mkdir -p /tmp/log/
   echo $RESULTFF > /tmp/log/last_speedtest_ff_mbps.txt
   echo $RESULTWAN > /tmp/log/last_speedtest_wan_mbps.txt
