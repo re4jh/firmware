@@ -1,6 +1,7 @@
 #!/bin/sh
 
-TESTIP=$(nslookup "ipv6.download2.thinkbroadband.com" | grep -oE "^Address .*" | grep -oE '([a-f0-9:]+:+)+[a-f0-9]+')
+TESTIP6=$(nslookup "ipv6.download2.thinkbroadband.com" 2a02:2970:1002::18 | grep -oE "^Address .*" | grep -oE '([a-f0-9:]+:+)+[a-f0-9]+')
+TESTIP4=$(nslookup "ipv4.download.thinkbroadband.com" 46.182.19.48 | grep -oE "^Address .*" | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
 MYFFGW=$(sockread /var/run/fastd.status < /dev/null 2> /dev/null | sed 's/\(.*\)"name": "gw\([0-9]*\)[^"]*"\(.*\)established\(.*\)/\2/g')
 MYNAME="$(uci -q get freifunk.@settings[0].name 2> /dev/null)"
 
@@ -36,16 +37,20 @@ fi
 # Determine FF-Gateway
 case $MYFFGW in
   01)
-    MYFFGWIP="fdef:1701:b5ee:23::1"
+    MYFFGWIP6="fdef:1701:b5ee:23::1"
+    MYFFGWIP4="10.15.224.1"
     ;;
   02)
-    MYFFGWIP="fdef:1701:b5ee:23::2"
+    MYFFGWIP6="fdef:1701:b5ee:23::2"
+    MYFFGWIP4="10.15.224.2"
     ;;
   03)
-    MYFFGWIP="fdef:1701:b5ee:23::3"
+    MYFFGWIP6="fdef:1701:b5ee:23::3"
+    MYFFGWIP4="10.15.224.3"
     ;;
   04)
-    MYFFGWIP="fdef:1701:b5ee:23::4"
+    MYFFGWIP6="fdef:1701:b5ee:23::4"
+    MYFFGWIP4="10.15.224.4"
     ;;
   *)
     echo "Unknown FF-Gateway: GW"$MYFFGW
@@ -102,32 +107,69 @@ else
  fi
 fi
 
-echo ">> Pinging my Gateway: $MYFFGW at $MYFFGWIP"
-GWPING=$(ping -I br-freifunk -c 3 -n $MYFFGWIP | grep "round-trip min" | grep -oE '([0-9][0-9\.\/]*)' | sed -r 's/[0-9\.]+\/([0-9\.]+)\/[0-9\.]+/\1/g')
-echo "Ping-Duration: $GWPING ms"
 echo
+echo ">> Pinging my Gateway: $MYFFGW at $MYFFGWIP6"
+GWPING6=$(ping -I br-freifunk -c 3 -n $MYFFGWIP6 | grep "round-trip min" | grep -oE '([0-9][0-9\.\/]*)' | sed -r 's/[0-9\.]+\/([0-9\.]+)\/[0-9\.]+/\1/g')
+echo "Ping-Duration (IPv6): $GWPING6 ms"
 
-echo ">> Initiating Wget-Speedtest via br-freifunk"
+echo
+echo ">> Pinging my Gateway: $MYFFGW at $MYFFGWIP4"
+GWPING6=$(ping -I br-freifunk -c 3 -n $MYFFGWIP4 | grep "round-trip min" | grep -oE '([0-9][0-9\.\/]*)' | sed -r 's/[0-9\.]+\/([0-9\.]+)\/[0-9\.]+/\1/g')
+echo "Ping-Duration (IPv4): $GWPING4 ms"
+
+if [[ $GWPING6 > 0 ]]; then
+ GWPING=$GWPING6
+else
+ GWPING=$GWPING4 
+fi
+
+echo
+echo ">> Initiating Wget-Speedtest (IPv6-Download) via br-freifunk"
 echo "Target-Url:" $TESTURL6
-echo "Establish Test-Route by command: ip route add $TESTIP/128 via $MYFFGWIP"
+echo "Establish Test-Route by command: ip route add $TESTIP6/128 via $MYFFGWIP6"
 echo
 
-ip route add $TESTIP/128 via $MYFFGWIP
+ip route add $TESTIP6/128 via $MYFFGWIP6
 STARTFF=$(date +%s)
 wget -6 -q -O /dev/null $TESTURL6
 wgetreturn=$?
 if [[ $wgetreturn = 0 ]]; then
  ENDFF=$(date +%s)
  echo "FF Download Done"
- ip route del $TESTIP/128 via $MYFFGWIP
+ ip route del $TESTIP6/128 via $MYFFGWIP6
  DURATIONFF=$(awk "BEGIN {print $ENDFF - $STARTFF}")
  RESULTFF=$(awk "BEGIN {print $AMOUNT/$DURATIONFF}")
  echo "FF: "$AMOUNT "Mbit in " $DURATIONFF " seconds."
  echo "That's " $RESULTFF "Mbit/s."
 else
- echo "ERROR: FF-Wget-Download failed. (Exit-Code: $wgetreturn)"
- ip route del $TESTIP/128 via $MYFFGWIP
+ echo "ERROR: FF-Wget-Download via IPv6 failed. (Exit-Code: $wgetreturn)"
+ ip route del $TESTIP6/128 via $MYFFGWIP6
  RESULTFF=0
+fi
+
+if [[ $wgetreturn != 0 ]]; then
+ echo
+ echo ">> Initiating Wget-Speedtest (IPv4) via br-freifunk"
+ echo "Target-Url:" $TESTURL4
+ echo "Establish Test-Route by command: ip route add $TESTIP4/32 via $MYFFGWIP4"
+ echo
+ ip route add $TESTIP4/32 via $MYFFGWIP4
+ STARTFF=$(date +%s)
+ wget -4 -q -O /dev/null $TESTURL4
+ wgetreturn=$?
+ if [[ $wgetreturn = 0 ]]; then
+  ENDFF=$(date +%s)
+  echo "FF Download Done"
+  ip route del $TESTIP4/32 via $MYFFGWIP4
+  DURATIONFF=$(awk "BEGIN {print $ENDFF - $STARTFF}")
+  RESULTFF=$(awk "BEGIN {print $AMOUNT/$DURATIONFF}")
+  echo "FF: "$AMOUNT "Mbit in " $DURATIONFF " seconds."
+  echo "That's " $RESULTFF "Mbit/s."
+ else
+  echo "ERROR: FF-Wget-Download via IPv4 failed. (Exit-Code: $wgetreturn)"
+  ip route del $TESTIP4/32 via $MYFFGWIP4
+  RESULTFF=0
+ fi
 fi
 
 echo
