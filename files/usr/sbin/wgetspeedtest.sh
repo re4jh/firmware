@@ -64,6 +64,7 @@ case $MYFFGW in
     ;;
 esac
 
+echo "========================"
 echo "Starting WGET-Speedtests"
 echo "========================"
 echo
