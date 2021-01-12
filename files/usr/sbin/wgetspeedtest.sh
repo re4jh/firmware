@@ -6,7 +6,7 @@ if [ "$1" = "-w" ]; then
   mkdir -p /tmp/log/
 fi
 
-TESTIP6=$(nslookup "ipv6.download2.thinkbroadband.com" 2a02:2970:1002::18 | grep -oE "^Address .*" | grep -oE '([a-f0-9:]+:+)+[a-f0-9]+')
+TESTIP6=$(nslookup "ipv6.download2.thinkbroadband.com" 46.182.19.48 | grep -oE "^Address .*" | grep -oE '([a-f0-9:]+:+)+[a-f0-9]+')
 TESTIP4=$(nslookup "ipv4.download.thinkbroadband.com" 46.182.19.48 | grep -oE "^Address .*" | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
 MYFFGW=$(sockread /var/run/fastd.status < /dev/null 2> /dev/null | sed 's/\(.*\)"name": "gw\([0-9]*\)[^"]*"\(.*\)established\(.*\)/\2/g')
 MYNAME="$(uci -q get freifunk.@settings[0].name 2> /dev/null)"
