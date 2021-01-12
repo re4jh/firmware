@@ -15,7 +15,7 @@ MYNAME="$(uci -q get freifunk.@settings[0].name 2> /dev/null)"
 LASTFFMBIT=0
 if [ -f /tmp/log/last_speedtest_wan_mbps.txt ]; then
  LASTFFMBIT=$(cat /tmp/log/last_speedtest_ff_mbps.txt)
- LASTFFMBIT=$(awk "BEGIN{printf \"%3.0f\", $LASTFFMBIT}")
+ LASTFFMBIT=$(awk "BEGIN{printf \"%.3f\", $LASTFFMBIT}")
 fi
 
 if [ $LASTFFMBIT -gt 10 ]; then
@@ -107,7 +107,7 @@ else
  if [ $DURATIONWAN == 0 ]; then
   DURATIONWAN=1
  fi
- RESULTWAN=$(awk "BEGIN {printf \"%3.0f\" $AMOUNT/$DURATIONWAN}")
+ RESULTWAN=$(awk "BEGIN {printf \"%.3f\" $AMOUNT/$DURATIONWAN}")
  echo "WAN: "$AMOUNT "Mbit in " $DURATIONWAN " seconds."
  echo "That's " $RESULTWAN "Mbit/s."
  echo
@@ -124,19 +124,19 @@ fi
 echo
 echo ">> Pinging my Gateway: $MYFFGW at $MYFFGWIP6"
 GWPING6=$(ping -I br-freifunk -c 3 -n $MYFFGWIP6 | grep "round-trip min" | grep -oE '([0-9][0-9\.\/]*)' | sed -r 's/[0-9\.]+\/([0-9\.]+)\/[0-9\.]+/\1/g')
-GWPING6=$(awk "BEGIN{printf \"%3.0f\", $GWPING6}")
+GWPING6=$(awk "BEGIN{printf \"%.3f\", $GWPING6}")
 echo "Ping-Duration (IPv6): $GWPING6 ms"
 
 echo
 echo ">> Pinging my Gateway: $MYFFGW at $MYFFGWIP4"
 GWPING4=$(ping -I br-freifunk -c 3 -n $MYFFGWIP4 | grep "round-trip min" | grep -oE '([0-9][0-9\.\/]*)' | sed -r 's/[0-9\.]+\/([0-9\.]+)\/[0-9\.]+/\1/g')
-GWPING4=$(awk "BEGIN{printf \"%3.0f\", $GWPING4}")
+GWPING4=$(awk "BEGIN{printf \"%.3f\", $GWPING4}")
 echo "Ping-Duration (IPv4): $GWPING4 ms"
 
 if [[ $GWPING6 -gt 0 ]]; then
- GWPING=$(awk "BEGIN{printf \"%3.0f\", $GWPING6}")
+ GWPING=$(awk "BEGIN{printf \"%.3f\", $GWPING6}")
 else
- GWPING=$(awk "BEGIN{printf \"%3.0f\", $GWPING4}")
+ GWPING=$(awk "BEGIN{printf \"%.3f\", $GWPING4}")
 fi
 
 if [[ "$1" = "-w" && $GWPING -gt 0  ]]; then
@@ -158,7 +158,7 @@ if [ $wgetreturn6 = 0 ]; then
  echo "FF Download Done"
  ip route del $TESTIP6/128 via $MYFFGWIP6
  DURATIONFF=$(awk "BEGIN {print $ENDFF - $START}")
- RESULTFF=$(awk "BEGIN {printf \"%3.0f\" $AMOUNT/$DURATIONFF}")
+ RESULTFF=$(awk "BEGIN {printf \"%.3f\" $AMOUNT/$DURATIONFF}")
  echo "FF: "$AMOUNT "Mbit in " $DURATIONFF " seconds."
  echo "That's " $RESULTFF "Mbit/s."
  if [ "$1" = "-w" ]; then
@@ -186,7 +186,7 @@ if [[ $wgetreturn6 != 0 || RESULTFF=0 ]]; then
   echo "FF Download Done"
   ip route del $TESTIP4/32 via $MYFFGWIP4
   DURATIONFF=$(awk "BEGIN {print $ENDFF - $STARTFF}")
-  RESULTFF=$(awk "BEGIN {printf \"%3.0f\" $AMOUNT/$DURATIONFF}")
+  RESULTFF=$(awk "BEGIN {printf \"%.3f\" $AMOUNT/$DURATIONFF}")
   echo "FF: "$AMOUNT "Mbit in " $DURATIONFF " seconds."
   echo "That's " $RESULTFF "Mbit/s."
   if [ "$1" = "-w" ]; then
