@@ -158,7 +158,7 @@ if [ $wgetreturn6 = 0 ]; then
  echo "FF Download Done"
  ip route del $TESTIP6/128 via $MYFFGWIP6
  DURATIONFF=$(awk "BEGIN {print $ENDFF - $START}")
- RESULTFF=$(awk "BEGIN {printf \"%3.0f\" $AMOUNT/$DURATIONFF}")
+ RESULTFF=$(awk "BEGIN {printf \"%.3f\" $AMOUNT/$DURATIONFF}")
  echo "FF: "$AMOUNT "Mbit in " $DURATIONFF " seconds."
  echo "That's " $RESULTFF "Mbit/s."
  if [ "$1" = "-w" ]; then
@@ -186,7 +186,7 @@ if [[ $wgetreturn6 != 0 || RESULTFF=0 ]]; then
   echo "FF Download Done"
   ip route del $TESTIP4/32 via $MYFFGWIP4
   DURATIONFF=$(awk "BEGIN {print $ENDFF - $STARTFF}")
-  RESULTFF=$(awk "BEGIN {printf \"%3.0f\" $AMOUNT/$DURATIONFF}")
+  RESULTFF=$(awk "BEGIN {printf \"%.3f\" $AMOUNT/$DURATIONFF}")
   echo "FF: "$AMOUNT "Mbit in " $DURATIONFF " seconds."
   echo "That's " $RESULTFF "Mbit/s."
   if [ "$1" = "-w" ]; then
