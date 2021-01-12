@@ -119,11 +119,13 @@ fi
 echo
 echo ">> Pinging my Gateway: $MYFFGW at $MYFFGWIP6"
 GWPING6=$(ping -I br-freifunk -c 3 -n $MYFFGWIP6 | grep "round-trip min" | grep -oE '([0-9][0-9\.\/]*)' | sed -r 's/[0-9\.]+\/([0-9\.]+)\/[0-9\.]+/\1/g')
+GWPING6=$(awk "BEGIN{printf \"%3.0f\", $GWPING6}")
 echo "Ping-Duration (IPv6): $GWPING6 ms"
 
 echo
 echo ">> Pinging my Gateway: $MYFFGW at $MYFFGWIP4"
-GWPING6=$(ping -I br-freifunk -c 3 -n $MYFFGWIP4 | grep "round-trip min" | grep -oE '([0-9][0-9\.\/]*)' | sed -r 's/[0-9\.]+\/([0-9\.]+)\/[0-9\.]+/\1/g')
+GWPING4=$(ping -I br-freifunk -c 3 -n $MYFFGWIP4 | grep "round-trip min" | grep -oE '([0-9][0-9\.\/]*)' | sed -r 's/[0-9\.]+\/([0-9\.]+)\/[0-9\.]+/\1/g')
+GWPING4=$(awk "BEGIN{printf \"%3.0f\", $GWPING4}")
 echo "Ping-Duration (IPv4): $GWPING4 ms"
 
 if [[ $GWPING6 -gt 0 ]]; then
