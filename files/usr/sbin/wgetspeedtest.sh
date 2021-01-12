@@ -106,15 +106,14 @@ else
  echo "WAN: "$AMOUNT "Mbit in " $DURATIONWAN " seconds."
  echo "That's " $RESULTWAN "Mbit/s."
  echo
+ if [ "$1" = "-w" ]; then
+  echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
+  echo $RESULTWAN > /tmp/log/last_speedtest_wan_mbps.txt
+ fi
  else
   echo "ERROR: WAN-Wget-Download via IPv6 failed. (Exit-Code: $wgetreturn)"
   RESULTWAN=0
  fi
-fi
-
-if [ "$1" = "-w" ]; then
-  echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
-  echo $RESULTWAN > /tmp/log/last_speedtest_wan_mbps.txt
 fi
 
 echo
@@ -133,7 +132,7 @@ else
  GWPING=$GWPING4 
 fi
 
-if [ "$1" = "-w" ]; then
+if [[ "$1" = "-w" && $GWPING > 0  ]]; then
   echo $GWPING > /tmp/log/last_gwping.txt
 fi
 
@@ -190,7 +189,7 @@ echo
 echo "All Download-Tests finished. " $(date) 
 echo 
 
-if [ "$1" = "-w" ]; then
+if [[ "$1" = "-w" && $RESULTFF > 0]]; then
   echo $RESULTFF > /tmp/log/last_speedtest_ff_mbps.txt
   echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
 fi
