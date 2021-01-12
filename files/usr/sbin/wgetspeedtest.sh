@@ -89,6 +89,10 @@ if [[ $wgetreturn = 0 ]]; then
  RESULTWAN=$(awk "BEGIN {print $AMOUNT/$DURATIONWAN}")
  echo "WAN: "$AMOUNT "Mbit in " $DURATIONWAN " seconds."
  echo "That's " $RESULTWAN "Mbit/s."
+ if [ "$1" = "-w" ]; then
+  echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
+  echo $RESULTWAN > /tmp/log/last_speedtest_wan_mbps.txt
+ fi
  echo
 else
  echo "ERROR: WAN-Wget-Download via IPv4 failed. (Exit-Code: $wgetreturn)"
@@ -102,7 +106,7 @@ else
  if [ $DURATIONWAN == 0 ]; then
   DURATIONWAN=1
  fi
- RESULTWAN=$(awk "BEGIN {print $AMOUNT/$DURATIONWAN}")
+ RESULTWAN=$(awk "BEGIN {printf \"%3.0f\" $AMOUNT/$DURATIONWAN}")
  echo "WAN: "$AMOUNT "Mbit in " $DURATIONWAN " seconds."
  echo "That's " $RESULTWAN "Mbit/s."
  echo
@@ -129,9 +133,9 @@ GWPING4=$(awk "BEGIN{printf \"%3.0f\", $GWPING4}")
 echo "Ping-Duration (IPv4): $GWPING4 ms"
 
 if [[ $GWPING6 -gt 0 ]]; then
- GWPING=$GWPING6
+ GWPING=$(awk "BEGIN{printf \"%3.0f\", $GWPING6}")
 else
- GWPING=$GWPING4 
+ GWPING=$(awk "BEGIN{printf \"%3.0f\", $GWPING4}")
 fi
 
 if [[ "$1" = "-w" && $GWPING -gt 0  ]]; then
@@ -145,24 +149,28 @@ echo "Establish Test-Route by command: ip route add $TESTIP6/128 via $MYFFGWIP6"
 echo
 
 ip route add $TESTIP6/128 via $MYFFGWIP6
-STARTFF=$(date +%s)
+START=$(date +%s)
 wget -6 -q -O /dev/null $TESTURL6
-wgetreturn=$?
-if [ $wgetreturn = 0 ]; then
+wgetreturn6=$?
+if [ $wgetreturn6 = 0 ]; then
  ENDFF=$(date +%s)
  echo "FF Download Done"
  ip route del $TESTIP6/128 via $MYFFGWIP6
- DURATIONFF=$(awk "BEGIN {print $ENDFF - $STARTFF}")
- RESULTFF=$(awk "BEGIN {print $AMOUNT/$DURATIONFF}")
+ DURATIONFF=$(awk "BEGIN {print $ENDFF - $START}")
+ RESULTFF=$(awk "BEGIN {printf \"%3.0f\" $AMOUNT/$DURATIONFF}")
  echo "FF: "$AMOUNT "Mbit in " $DURATIONFF " seconds."
  echo "That's " $RESULTFF "Mbit/s."
+ if [ "$1" = "-w" ]; then
+  echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
+  echo $RESULTWAN > /tmp/log/last_speedtest_ff_mbps.txt
+ fi
 else
- echo "ERROR: FF-Wget-Download via IPv6 failed. (Exit-Code: $wgetreturn)"
+ echo "ERROR: FF-Wget-Download via IPv6 failed. (Exit-Code: $wgetreturn6)"
  ip route del $TESTIP6/128 via $MYFFGWIP6
  RESULTFF=0
 fi
 
-if [[ $wgetreturn != 0 ]]; then
+if [[ $wgetreturn != 0 || RESULTFF=0 ]]; then
  echo
  echo ">> Initiating Wget-Speedtest (IPv4) via br-freifunk"
  echo "Target-Url:" $TESTURL4
@@ -171,17 +179,21 @@ if [[ $wgetreturn != 0 ]]; then
  ip route add $TESTIP4/32 via $MYFFGWIP4
  STARTFF=$(date +%s)
  wget -4 -q -O /dev/null $TESTURL4
- wgetreturn=$?
- if [[ $wgetreturn = 0 ]]; then
+ wgetreturn4=$?
+ if [[ $wgetreturn4 = 0 ]]; then
   ENDFF=$(date +%s)
   echo "FF Download Done"
   ip route del $TESTIP4/32 via $MYFFGWIP4
   DURATIONFF=$(awk "BEGIN {print $ENDFF - $STARTFF}")
-  RESULTFF=$(awk "BEGIN {print $AMOUNT/$DURATIONFF}")
+  RESULTFF=$(awk "BEGIN {printf \"%3.0f\" $AMOUNT/$DURATIONFF}")
   echo "FF: "$AMOUNT "Mbit in " $DURATIONFF " seconds."
   echo "That's " $RESULTFF "Mbit/s."
+  if [ "$1" = "-w" ]; then
+   echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
+   echo $RESULTWAN > /tmp/log/last_speedtest_ff_mbps.txt
+  fi
  else
-  echo "ERROR: FF-Wget-Download via IPv4 failed. (Exit-Code: $wgetreturn)"
+  echo "ERROR: FF-Wget-Download via IPv4 failed. (Exit-Code: $wgetreturn4)"
   ip route del $TESTIP4/32 via $MYFFGWIP4
   RESULTFF=0
  fi
