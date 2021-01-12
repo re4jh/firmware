@@ -126,13 +126,13 @@ echo ">> Pinging my Gateway: $MYFFGW at $MYFFGWIP4"
 GWPING6=$(ping -I br-freifunk -c 3 -n $MYFFGWIP4 | grep "round-trip min" | grep -oE '([0-9][0-9\.\/]*)' | sed -r 's/[0-9\.]+\/([0-9\.]+)\/[0-9\.]+/\1/g')
 echo "Ping-Duration (IPv4): $GWPING4 ms"
 
-if [[ $GWPING6 > 0 ]]; then
+if [[ $GWPING6 -gt 0 ]]; then
  GWPING=$GWPING6
 else
  GWPING=$GWPING4 
 fi
 
-if [[ "$1" = "-w" && $GWPING > 0  ]]; then
+if [[ "$1" = "-w" && $GWPING -gt 0  ]]; then
   echo $GWPING > /tmp/log/last_gwping.txt
 fi
 
@@ -146,7 +146,7 @@ ip route add $TESTIP6/128 via $MYFFGWIP6
 STARTFF=$(date +%s)
 wget -6 -q -O /dev/null $TESTURL6
 wgetreturn=$?
-if [[ $wgetreturn = 0 ]]; then
+if [ $wgetreturn = 0 ]; then
  ENDFF=$(date +%s)
  echo "FF Download Done"
  ip route del $TESTIP6/128 via $MYFFGWIP6
@@ -189,7 +189,7 @@ echo
 echo "All Download-Tests finished. " $(date) 
 echo 
 
-if [[ "$1" = "-w" && $RESULTFF > 0 ]]; then
+if [[ "$1" = "-w" && $RESULTFF -gt 0 ]]; then
   echo $RESULTFF > /tmp/log/last_speedtest_ff_mbps.txt
   echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
 fi
