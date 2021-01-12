@@ -189,7 +189,7 @@ echo
 echo "All Download-Tests finished. " $(date) 
 echo 
 
-if [[ "$1" = "-w" && $RESULTFF > 0]]; then
+if [[ "$1" = "-w" && $RESULTFF > 0 ]]; then
   echo $RESULTFF > /tmp/log/last_speedtest_ff_mbps.txt
   echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
 fi
