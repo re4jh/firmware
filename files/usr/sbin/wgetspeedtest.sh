@@ -1,5 +1,11 @@
 #!/bin/sh
 
+
+if [ "$1" = "-w" ]; then
+  mkdir -p /tmp/
+  mkdir -p /tmp/log/
+fi
+
 TESTIP6=$(nslookup "ipv6.download2.thinkbroadband.com" 2a02:2970:1002::18 | grep -oE "^Address .*" | grep -oE '([a-f0-9:]+:+)+[a-f0-9]+')
 TESTIP4=$(nslookup "ipv4.download.thinkbroadband.com" 46.182.19.48 | grep -oE "^Address .*" | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
 MYFFGW=$(sockread /var/run/fastd.status < /dev/null 2> /dev/null | sed 's/\(.*\)"name": "gw\([0-9]*\)[^"]*"\(.*\)established\(.*\)/\2/g')
@@ -69,7 +75,6 @@ echo "Active FF-Gateway: GW"$MYFFGW
 echo "Map-Entry: https://mate.ffbsee.net/meshviewer/index.html#!/de/map/"$(uci -q get network.freifunk.macaddr | sed 's/:\|//g')
 echo
 
-
 echo ">> Starting Download-Tests with $AMOUNT Mbits on " $(date) 
 STARTWAN=$(date +%s)
 wget -4 -q -O /dev/null $TESTURL4
@@ -107,6 +112,11 @@ else
  fi
 fi
 
+if [ "$1" = "-w" ]; then
+  echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
+  echo $RESULTWAN > /tmp/log/last_speedtest_wan_mbps.txt
+fi
+
 echo
 echo ">> Pinging my Gateway: $MYFFGW at $MYFFGWIP6"
 GWPING6=$(ping -I br-freifunk -c 3 -n $MYFFGWIP6 | grep "round-trip min" | grep -oE '([0-9][0-9\.\/]*)' | sed -r 's/[0-9\.]+\/([0-9\.]+)\/[0-9\.]+/\1/g')
@@ -121,6 +131,10 @@ if [[ $GWPING6 > 0 ]]; then
  GWPING=$GWPING6
 else
  GWPING=$GWPING4 
+fi
+
+if [ "$1" = "-w" ]; then
+  echo $GWPING > /tmp/log/last_gwping.txt
 fi
 
 echo
@@ -177,10 +191,6 @@ echo "All Download-Tests finished. " $(date)
 echo 
 
 if [ "$1" = "-w" ]; then
-  mkdir -p /tmp/
-  mkdir -p /tmp/log/
   echo $RESULTFF > /tmp/log/last_speedtest_ff_mbps.txt
-  echo $RESULTWAN > /tmp/log/last_speedtest_wan_mbps.txt
-  echo $GWPING > /tmp/log/last_gwping.txt
   echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
 fi
