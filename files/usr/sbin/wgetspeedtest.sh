@@ -163,7 +163,7 @@ if [ $wgetreturn6 = 0 ]; then
  echo "That's " $RESULTFF "Mbit/s."
  if [ "$1" = "-w" ]; then
   echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
-  echo $RESULTWAN > /tmp/log/last_speedtest_ff_mbps.txt
+  echo $RESULTFF > /tmp/log/last_speedtest_ff_mbps.txt
  fi
 else
  echo "ERROR: FF-Wget-Download via IPv6 failed. (Exit-Code: $wgetreturn6)"
