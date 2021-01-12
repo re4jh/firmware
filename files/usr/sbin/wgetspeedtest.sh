@@ -171,7 +171,7 @@ else
  RESULTFF=0
 fi
 
-if [[ $wgetreturn != 0 || RESULTFF=0 ]]; then
+if [[ $wgetreturn6 != 0 || RESULTFF=0 ]]; then
  echo
  echo ">> Initiating Wget-Speedtest (IPv4) via br-freifunk"
  echo "Target-Url:" $TESTURL4
