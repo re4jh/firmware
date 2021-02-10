@@ -1,5 +1,9 @@
 #!/bin/sh
 
+mac_to_ipv6_ll() {
+    IFS=':'; set $1; unset IFS
+    echo "fdef:1701:b5ee:23:$(printf %02x $((0x$1^ 2)))$2:${3}ff:fe$4:$5$6"
+}
 
 if [ "$1" = "-w" ]; then
   mkdir -p /tmp/
@@ -10,12 +14,18 @@ TESTIP6=$(nslookup "ipv6.download2.thinkbroadband.com" 46.182.19.48 | grep -oE "
 TESTIP4=$(nslookup "ipv4.download.thinkbroadband.com" 46.182.19.48 | grep -oE "^Address .*" | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
 MYFFGW=$(sockread /var/run/fastd.status < /dev/null 2> /dev/null | sed 's/\(.*\)"name": "gw\([0-9]*\)[^"]*"\(.*\)established\(.*\)/\2/g')
 MYNAME="$(uci -q get freifunk.@settings[0].name 2> /dev/null)"
+MYMAC=$(cat /sys/class/net/br-freifunk/address)
+
+IPV6=$(mac_to_ipv6_ll $MYMAC)
+IFCONFIG=$(which ifconfig)
+echo "MY IPv6 should be: $IPV6"
+ip addr show br-freifunk | grep -Eq "inet6 $IPV6/64 scope global" || "$IFCONFIG" br-freifunk inet6 add $IPV6/64
 
 # Determine last Speedresult and decide about test-size depending on that
 LASTFFMBIT=0
 if [ -f /tmp/log/last_speedtest_wan_mbps.txt ]; then
  LASTFFMBIT=$(cat /tmp/log/last_speedtest_ff_mbps.txt)
- LASTFFMBIT=$(awk "BEGIN{printf \"%3.0f\", $LASTFFMBIT}")
+ LASTFFMBIT=$(awk "BEGIN{printf \"%.0f\", $LASTFFMBIT}")
 fi
 
 if [ $LASTFFMBIT -gt 10 ]; then
@@ -91,6 +101,7 @@ if [[ $wgetreturn = 0 ]]; then
  echo "WAN: "$AMOUNT "Mbit in " $DURATIONWAN " seconds."
  echo "That's " $RESULTWAN "Mbit/s."
  if [ "$1" = "-w" ]; then
+  echo '... writing ts & wan_mbps'
   echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
   echo $RESULTWAN > /tmp/log/last_speedtest_wan_mbps.txt
  fi
@@ -112,6 +123,7 @@ else
  echo "That's " $RESULTWAN "Mbit/s."
  echo
  if [ "$1" = "-w" ]; then
+  echo '... writing ts & wan_mbps'
   echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
   echo $RESULTWAN > /tmp/log/last_speedtest_wan_mbps.txt
  fi
@@ -140,6 +152,7 @@ else
 fi
 
 if [[ "$1" = "-w" && $GWPING -gt 0  ]]; then
+  echo '... writing ts & last_gwping'
   echo $GWPING > /tmp/log/last_gwping.txt
 fi
 
@@ -162,6 +175,7 @@ if [ $wgetreturn6 = 0 ]; then
  echo "FF: "$AMOUNT "Mbit in " $DURATIONFF " seconds."
  echo "That's " $RESULTFF "Mbit/s."
  if [ "$1" = "-w" ]; then
+  echo '... writing ts & ff_mbps'
   echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
   echo $RESULTFF > /tmp/log/last_speedtest_ff_mbps.txt
  fi
@@ -186,10 +200,11 @@ if [[ $wgetreturn6 != 0 || RESULTFF=0 ]]; then
   echo "FF Download Done"
   ip route del $TESTIP4/32 via $MYFFGWIP4
   DURATIONFF=$(awk "BEGIN {print $ENDFF - $STARTFF}")
-  RESULTFF=$(awk "BEGIN {printf \"%.3f\" $AMOUNT/$DURATIONFF}")
+  RESULTFF=$(awk "BEGIN {printf \"%3.0f\" $AMOUNT/$DURATIONFF}")
   echo "FF: "$AMOUNT "Mbit in " $DURATIONFF " seconds."
   echo "That's " $RESULTFF "Mbit/s."
   if [ "$1" = "-w" ]; then
+   echo '... writing ts & ff_mbps'
    echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
    echo $RESULTWAN > /tmp/log/last_speedtest_ff_mbps.txt
   fi
@@ -205,6 +220,7 @@ echo "All Download-Tests finished. " $(date)
 echo 
 
 if [[ "$1" = "-w" && $RESULTFF -gt 0 ]]; then
+  echo '... writing ts & ff_mbps'
   echo $RESULTFF > /tmp/log/last_speedtest_ff_mbps.txt
   echo $STARTWAN > /tmp/log/last_speedtest_ts.txt
 fi
